@@ -1,26 +1,61 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, abort
+from flask import Flask, flash, request, redirect, url_for, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 
+ALLOWED_EXTENSIONS = {'txt', 'csv', 'tsv'}
+UPLOAD_FOLDER = './upload'
 app = Flask(__name__)
-#app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
+
 app.config['UPLOAD_EXTENSIONS'] = ['.txt', '.csv', '.tsv']
-app.config['UPLOAD_PATH'] = 'uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# what url to navigate to and display html code
+# @app.route('/hello')
+# def hello_world():
+#     return '<h1>Salam, Donya!</h1>'
+
+# @app.route('/about/<username>')
+# def about_page(username):
+#     return f'<h1>This is the about page of {username}</h1>'
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+@app.route('/home')
+def home_page():
+    return render_template('home.html')
 
-@app.route('/', methods=['POST'])
-def upload_files():
-    uploaded_file = request.files['file']
-    filename = secure_filename(uploaded_file.filename)
-    if filename != '':
-        file_ext = os.path.splitext(filename)[1]
-        if file_ext not in app.config['UPLOAD_EXTENSIONS']:
-            abort(400)
-        uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-    return redirect(url_for('index'))
-		
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/about')
+def about_page():
+    return render_template('about.html')
+
+@app.route('/uploads/<name>')
+def download_file(name):
+    return send_from_directory(app.config["UPLOAD_FOLDER"], name)
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_page():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('download_file', name=filename))
+    return render_template('upload.html')
+
+#@app.route('/')
+#def benfordParse():
+
 if __name__ == '__main__':
    app.run(debug = True)

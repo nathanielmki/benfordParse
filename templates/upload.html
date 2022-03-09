@@ -1,13 +1,14 @@
-<!doctype html>
-<html>
-  <head>
-    <title>benfordParser</title>
-  </head>
-  <body>
-    <h1>File Upload</h1>
-    <form method="POST" action="" enctype="multipart/form-data">
-      <p><input type="file" name="file"></p>
-      <p><input type="submit" value="Submit"></p>
-    </form>
-  </body>
-</html>
+{% extends 'base.html' %}
+{% block title %}
+        Upload Page
+{% endblock %}
+
+{% block content %}
+<body>
+  <h1>File Upload</h1>
+  <form method="POST" action="" enctype="multipart/form-data">
+    <p><input type="file" name="file"></p>
+    <p><input type="submit" value="Submit"></p>
+  </form>
+</body>
+{% endblock %}
