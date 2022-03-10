@@ -11,6 +11,7 @@ from unittest import result
 from flask import Flask, flash, request, redirect, url_for, render_template, send_from_directory, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
+from benfordParser import benfordParse
 
 ALLOWED_EXTENSIONS = {'txt', 'csv', 'tsv'}
 UPLOAD_FOLDER = './upload'
@@ -69,10 +70,12 @@ def upload_page():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             
             return redirect(url_for('download_file', name=filename))
+            return redirect
     return render_template('upload.html')
 
-#def benfordParse(file):
-
+@app.rout('/analysis', methods=['GET'])
+def analysis_page():
+    return render_template('analysis.html')
 
 
 # @app.route('/api/v1/upload', methods=['POST'])
