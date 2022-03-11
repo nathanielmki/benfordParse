@@ -15,12 +15,14 @@ from benfordParser import benfordParse
 
 ALLOWED_EXTENSIONS = {'txt', 'csv', 'tsv'}
 UPLOAD_FOLDER = './upload'
+USER_CONTENT = './results'
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://benfordParser.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_EXTENSIONS'] = ALLOWED_EXTENSIONS
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['USER_CONTENT'] = USER_CONTENT
 db = SQLAlchemy(app)
 
 class Upload(db.Model):
@@ -69,9 +71,11 @@ def upload_page():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            
+            # username = request.form['Username', None]
+            # project_name = request.form['Project Name', None]
+            # os.path.join([USER_CONTENT, username, project_name])
             return redirect(url_for('download_file', name=filename))
-            return redirect
+            # return redirect
     return render_template('upload.html')
 
 # @app.rout('/analysis', methods=['GET'])

@@ -29,7 +29,7 @@ def benfordParse(infile = "", outfile=None, analysis_column="", index_column="",
     
     # if outfile name is given, saves output to disk 
     if outfile !=None:
-        f1d.to_csv(outfile, encoding='utf-8', index=False)
+        f1d.to_csv(outfile + '.csv', encoding='utf-8', index=False)
     else:
         print(f1d)
 
