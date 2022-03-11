@@ -5,7 +5,10 @@
 
 {% block content %}
 <body>
-  <h2>Please upload a file to be processed by Benford Parser</h2>
+  <h2>Please provide a username and project name</h3>  
+    <p><input type="text" name="Username"></p>
+    <p><input type="text" name="Project Name"></p>
+  <h3>Choose a file to be uploaded and processed by Benford Parser</h2>
   <form method="POST" action="{{ url_for('upload_page') }}" enctype="multipart/form-data">
     <p><input type="file" name="file"></p>
     <p><input type="submit" value="Submit"></p>

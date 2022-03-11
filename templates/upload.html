@@ -4,21 +4,7 @@
 {% endblock %}
 
 {% block content %}
-
-
 <body>
-<?php
-$message = '';
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  if ($_FILES['file']['error'] == 0) {
-    $message = '<b>File</b>' . $_FILES['file']['name'] . '<br>';
-    $message = '<b>File</b>' . $_FILES['file']['size'] . ' bytes';
-  } else {
-    $message = 'The file could not be uploaded.';
-  }
-}
-?>
-<?= $message ?>
   <h1>File Upload</h1>
   <form method="POST" action="{{ url_for('upload_page') }}" enctype="multipart/form-data">
     <p><input type="file" name="file"></p>

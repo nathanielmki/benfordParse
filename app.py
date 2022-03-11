@@ -41,6 +41,7 @@ def allowed_file(filename):
 def about_page():
     return render_template('about.html')
 
+# view results of parsing a file through benfordParser
 @app.route('/results.html')
 def results_page():
     return render_template('results.html')
@@ -73,9 +74,9 @@ def upload_page():
             return redirect
     return render_template('upload.html')
 
-@app.rout('/analysis', methods=['GET'])
-def analysis_page():
-    return render_template('analysis.html')
+# @app.rout('/analysis', methods=['GET'])
+# def analysis_page():
+#     return render_template('analysis.html')
 
 
 # @app.route('/api/v1/upload', methods=['POST'])
@@ -102,4 +103,4 @@ def analysis_page():
 
 
 if __name__ == '__main__':
-   app.run(debug = True, host='0.0.0.0', port=3000)
+   app.run(debug = True, host='0.0.0.0')

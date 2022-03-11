@@ -23,15 +23,8 @@ def benfordParse(infile = "", outfile=None, analysis_column="", index_column="",
     # create dataframe based upon user defined analysis column
     analysis_data = df[analysis_column]
 
-    #print(analysis_data)
-
-    #analysis_data.describe()
-    #analysis_data.info()
-
-    ##################################### using benford lib #############################
-
-    # perform Benford test on selected data
-    f1d = bf.first_digits(analysis_data, digs=1, save_plot=outfile)
+    # perform Benford test on selected data, defined to be the first digits
+    f1d = bf.first_digits(analysis_data, digs=1, save_plot=outfile + '_plot')
     print(f1d)
     
     # if outfile name is given, saves output to disk 
@@ -39,6 +32,10 @@ def benfordParse(infile = "", outfile=None, analysis_column="", index_column="",
         f1d.to_csv(outfile, encoding='utf-8', index=False)
     else:
         print(f1d)
+
+def inputVerification(parsed_args):
+    if (parsed_args.infile and not parsed_args.analysis_column):
+        raise Exception("Missing analysis_column argument, did you forget to select one?")
 
 def main():
     # Definitions for available arguments
@@ -51,12 +48,14 @@ def main():
     parser.add_argument("-o", "--outfile", dest="outfile",
                         help="Optional output filename. If not given, results will be printed to terminal")
     
-    parser.add_argument("-ac", "--analysis_col", required=True, dest="analysis_column",
+    parser.add_argument("-ac", "--analysis_col", dest="analysis_column",
                         help="Column name to process through parser")
 
     parser.add_argument("-hs", "--header_status", dest="header_status",
                         help="If header exists on file, leave blank. If there is no header on datafile, set to None")
-    
+
+    parser.parsed_args = inputVerification(parser.parse_args())
+
     benfordParse(**vars(parser.parse_args()))
 if __name__ == '__main__':
     main()
