@@ -78,6 +78,10 @@ def upload_page():
             # return redirect
     return render_template('upload.html')
 
+
+@app.route('/benfordParser')
+def benfordParser():
+    input = benfordParser.input(input)
 # @app.rout('/analysis', methods=['GET'])
 # def analysis_page():
 #     return render_template('analysis.html')
