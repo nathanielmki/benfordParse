@@ -4,14 +4,22 @@
 {% endblock %}
 
 {% block content %}
+
 <body>
-        <img src="{{plot_path}}" class="img-fluid">
+        <div class="d-grid gap-2 col-6 mx-auto">
+                <button class="btn btn-outline-info" type="button">View Raw Data</button>
+        </div>
+        <img src="{{plot_path}}" class="rounded mx-auto d-block">
+
+        
 </body>
+
 {% endblock %}
-        <ul>
+
+<!-- <ul>
         {% for row in datafile %}
                 {% for column in row %}
                 <li>{{column}}</li>
                 {% endfor %}
         {% endfor %}
-        </ul>
+        </ul> -->

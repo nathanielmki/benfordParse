@@ -18,14 +18,14 @@ from benfordParser import main
 
 ALLOWED_EXTENSIONS = {'txt', 'csv', 'tsv', 'png'}
 UPLOAD_FOLDER = './upload'
-USER_CONTENT = './results'
+RESULTS_FOLDER = './results'
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://benfordParser.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_EXTENSIONS'] = ALLOWED_EXTENSIONS
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['USER_CONTENT'] = USER_CONTENT
+app.config['RESULTS_FOLDER'] = RESULTS_FOLDER
 db = SQLAlchemy(app)
 
 class Upload(db.Model):
@@ -57,19 +57,29 @@ def results_page():
     # create dataframe of uploaded file, 
     # engine is specified to allow python to determine delimiter
     df = pd.read_csv(saved_file, sep=None, engine='python')
-    print(df)
-
+    # try:
+    #     print(df)
+    # except ValueError:
+    #     print("Is your file empty?")
     # create dataframe based upon user defined analysis column
+    # try:
+    # try:
     column_name = request.form['columnOperator']
+    # except KeyError:
+    #     print("Was a valid column name provided?")    
     analysis_data = df[column_name]
     print(analysis_data)
+    # except KeyError:
+    #     print("Not a valid column selection, please examine your file and try again")
 
-    # perform Benford test on selected data, defined to be the first digits
+    # perform Benford test on selected data, with user defined output
     results_name = request.form['resultsOperator']
     save_plot = 'static/results/' + results_name + '_plot.png'
+    # try:
     f1d = bf.first_digits(analysis_data, digs=1, save_plot=save_plot)
     print(f1d)
-
+    # except UnboundLocalError:
+    #     print("Did you select a valid column to operate on?")
     # saves output csv file to disk
     if results_name !=None:
         save_datafile = 'static/results/' + results_name + '.csv'
@@ -78,6 +88,10 @@ def results_page():
         print(f1d)
 
     return render_template('results.html', datafile=f1d, plot_path=save_plot, datafile_path=save_datafile)
+
+@app.route('/results/<name>')
+def display_csv(name):
+    return send_from_directory(app.config["RESULTS_FOLDER"], name)
 
 @app.route('/uploads/<name>')
 def download_file(name):
@@ -99,20 +113,15 @@ def upload_page():
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
-        # if file.filename != '':
-        #     file_ext = os.path.splitext(file.filename)[1]
-        #     if file_ext not in app.config['UPLOAD_EXTENSIONS']:
-        #         flash('File extension is either not allowed, or missing')
-        #         return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # username = request.form['Username', None]
             # project_name = request.form['Project Name', None]
-            # os.path.join([USER_CONTENT, username, project_name])
+            # os.path.join([RESULTS_FOLDER, username, project_name])
             #return redirect(url_for('download_file', name=filename))
             #return redirect(url_for('interactions.html'))
-    return render_template('interactions.html', file=file)
+    return render_template('upload.html', file=file)
 
 # @app.route('/upload/<name>/interactions/benford', methods=['GET', 'POST'])
 # def benford(infile = "", outfile=None, analysis_column=""):
