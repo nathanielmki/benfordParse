@@ -3,7 +3,8 @@ services:
   app:
     build: .
     command: python app.py
+    network_mode: default
     ports:
-      - "8000:5000"
+      - "127.0.0.1:8000:5000"
     volumes:
       - .:/benfordParse
