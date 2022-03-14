@@ -20,7 +20,7 @@ Navigate to `127.0.0.1:5000` in your web browser, or `ctrl/cmd-click` the link i
 
 ## How to Use
 
-From the start page, users are greeted by three input fields:
+From the home page, users are greeted by three input fields:
 * `Choose File`: Allows users to browse their filesystem and select a file for testing.
 * The second field allows users to specify which column the want to operate on.
 * Finally, the third field lets users name their output files
