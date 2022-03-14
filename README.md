@@ -7,9 +7,8 @@ In 1938, Frank Benford published a paper showing the distribution of the leading
 
 `benfordParse` allows users to submit a data file, select a column to analyze, and test their dataset against Benfords Law. The expected output of this program is table containing the distribution of found counts against expected, as well as a plot graphing the distribution. This output is saved within `/static/results` directory.
 
-## Instructions
+## Installation Instructions
 The following instructions assume you have `python3`, `pip`, and `venv` already installed on your system.
-
 
 First, clone the repository from Github and `cd` into it. Then activate the included python virtual environment with `source benfordParse_env/bin/activate`.
 
@@ -18,3 +17,14 @@ Once activated, install all required packages using `pip install -r requirements
 Launch the flask application by executing `python3 -m flask run` in the app root directory.
 
 Navigate to `127.0.0.1:5000` in your web browser, or `ctrl/cmd-click` the link in the terminal to begin using the webapp.
+
+## How to Use
+
+From the start page, users be greeted by three input fields:
+* `Choose File`: Allows users to browse their filesystem and select a file for testing.
+* The second field allows users to specify which column the want to operate on.
+* Finally, the third field lets users name their output files
+
+Upon hitting submit, users are redirected to the results page, which displays the `Expected vs. Found Distribution` of digits 1-9 in your dataset.
+
+To view the raw CSV file that was used to generate the graph, select `Choose File` under "View Raw Data", browse to the named CSV file in the `/static/results` directory and click `Submit`.
