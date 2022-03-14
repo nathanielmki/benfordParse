@@ -1,18 +1,10 @@
-FROM ubuntu:20.04
-
-LABEL Nathaniel Maki "njmaki[at]mtu.edu"
-
-RUN apt-get update -y && \
-    apt-get install -y python3-pip python-dev
-
-COPY ./requirements.txt /benfordParse/requirements.txt
-
+# syntax=docker/dockerfile:1
+FROM python:3.10
 WORKDIR /benfordParse
-
+ENV FLASK_APP=app.py
+ENV FLASK_RUN_HOST=0.0.0.0
+COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
-
-COPY . /benfordParse
-
-ENTRYPOINT [ “python” ]
-
-CMD ["app.py"]
+EXPOSE 5000
+COPY . .
+CMD ["flask", "run"]
