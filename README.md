@@ -17,7 +17,4 @@ Once activated, install all required packages using `pip install -r requirements
 
 Launch the flask application by executing `python3 -m flask run` in the app root directory.
 
-Navigate to `127.0.0.1:5000` in your web-browser, or `ctrl/cmd-click` the link in the terminal to begin using the webapp.
-
-## Input Fields
-
+Navigate to `127.0.0.1:5000` in your web browser, or `ctrl/cmd-click` the link in the terminal to begin using the webapp.
