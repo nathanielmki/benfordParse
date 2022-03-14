@@ -78,6 +78,7 @@ def results_page():
     # try:
     f1d = bf.first_digits(analysis_data, digs=1, save_plot=save_plot)
     print(f1d)
+
     # except UnboundLocalError:
     #     print("Did you select a valid column to operate on?")
     # saves output csv file to disk
@@ -119,7 +120,7 @@ def upload_page():
             # username = request.form['Username', None]
             # project_name = request.form['Project Name', None]
             # os.path.join([RESULTS_FOLDER, username, project_name])
-            #return redirect(url_for('download_file', name=filename))
+            return redirect(url_for('download_file', name=filename))
             #return redirect(url_for('interactions.html'))
     return render_template('upload.html', file=file)
 
