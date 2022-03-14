@@ -58,7 +58,6 @@ def results_page():
     # engine is specified to allow python to determine delimiter
     df = pd.read_csv(saved_file, sep=None, engine='python')
     print(df)
-    #datafile = csv.reader(request.files['file'], delimiter='\t')
 
     # create dataframe based upon user defined analysis column
     column_name = request.form['columnOperator']
@@ -73,11 +72,12 @@ def results_page():
 
     # saves output csv file to disk
     if results_name !=None:
-        f1d.to_csv(results_name + '.csv', encoding='utf-8', index=True)
+        save_datafile = 'static/results/' + results_name + '.csv'
+        f1d.to_csv(save_datafile, encoding='utf-8', index=True)
     else:
         print(f1d)
 
-    return render_template('results.html', datafile=f1d, plot_path=save_plot)
+    return render_template('results.html', datafile=f1d, plot_path=save_plot, datafile_path=save_datafile)
 
 @app.route('/uploads/<name>')
 def download_file(name):

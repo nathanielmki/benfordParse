@@ -5,7 +5,7 @@ LABEL Nathaniel Maki "njmaki[at]mtu.edu"
 RUN apt-get update -y && \
     apt-get install -y python3-pip python-dev
 
-COPY ./requirements.txt /app/requirements.txt
+COPY ./requirements.txt /benfordParse/requirements.txt
 
 WORKDIR /benfordParse
 
