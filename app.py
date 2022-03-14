@@ -1,9 +1,12 @@
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 import os
+import csv
 import numpy as np
 import pandas as pd
 import sys
 import math
-import matplotlib.pyplot as plt
 import benford as bf
 
 from curses import meta
@@ -11,9 +14,9 @@ from unittest import result
 from flask import Flask, flash, request, redirect, url_for, render_template, send_from_directory, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
-from benfordParser import benfordParse
+from benfordParser import main
 
-ALLOWED_EXTENSIONS = {'txt', 'csv', 'tsv'}
+ALLOWED_EXTENSIONS = {'txt', 'csv', 'tsv', 'png'}
 UPLOAD_FOLDER = './upload'
 USER_CONTENT = './results'
 
@@ -44,9 +47,37 @@ def about_page():
     return render_template('about.html')
 
 # view results of parsing a file through benfordParser
-@app.route('/results.html')
+@app.route('/results.html', methods = ['GET', 'POST'])
 def results_page():
-    return render_template('results.html')
+    file = request.files['file']
+    if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            saved_file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(saved_file)
+    # create dataframe of uploaded file, 
+    # engine is specified to allow python to determine delimiter
+    df = pd.read_csv(saved_file, sep=None, engine='python')
+    print(df)
+    #datafile = csv.reader(request.files['file'], delimiter='\t')
+
+    # create dataframe based upon user defined analysis column
+    column_name = request.form['columnOperator']
+    analysis_data = df[column_name]
+    print(analysis_data)
+
+    # perform Benford test on selected data, defined to be the first digits
+    results_name = request.form['resultsOperator']
+    save_plot = 'static/results/' + results_name + '_plot.png'
+    f1d = bf.first_digits(analysis_data, digs=1, save_plot=save_plot)
+    print(f1d)
+
+    # saves output csv file to disk
+    if results_name !=None:
+        f1d.to_csv(results_name + '.csv', encoding='utf-8', index=True)
+    else:
+        print(f1d)
+
+    return render_template('results.html', datafile=f1d, plot_path=save_plot)
 
 @app.route('/uploads/<name>')
 def download_file(name):
@@ -68,24 +99,40 @@ def upload_page():
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
+        # if file.filename != '':
+        #     file_ext = os.path.splitext(file.filename)[1]
+        #     if file_ext not in app.config['UPLOAD_EXTENSIONS']:
+        #         flash('File extension is either not allowed, or missing')
+        #         return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # username = request.form['Username', None]
             # project_name = request.form['Project Name', None]
             # os.path.join([USER_CONTENT, username, project_name])
-            return redirect(url_for('download_file', name=filename))
-            # return redirect
-    return render_template('upload.html')
+            #return redirect(url_for('download_file', name=filename))
+            #return redirect(url_for('interactions.html'))
+    return render_template('interactions.html', file=file)
 
+# @app.route('/upload/<name>/interactions/benford', methods=['GET', 'POST'])
+# def benford(infile = "", outfile=None, analysis_column=""):
+#     # create dataframe of uploaded file, 
+#     # engine is specified to allow python to determine delimiter
+#     df = pd.read_csv(infile, sep=None, engine='python')
 
-@app.route('/benfordParser')
-def benfordParser():
-    input = benfordParser.input(input)
-# @app.rout('/analysis', methods=['GET'])
-# def analysis_page():
-#     return render_template('analysis.html')
+#     # create dataframe based upon user defined analysis column
+#     analysis_data = df[analysis_column]
 
+#     # perform Benford test on selected data, defined to be the first digits
+#     f1d = bf.first_digits(analysis_data, digs=1, save_plot=outfile + '_plot')
+#     print(f1d)
+    
+#     # if outfile name is given, saves output to disk 
+#     if outfile !=None:
+#         f1d.to_csv(outfile + '.csv', encoding='utf-8', index=False)
+#     else:
+#         print(f1d)
+#     return render_template('benford.html')
 
 # @app.route('/api/v1/upload', methods=['POST'])
 # def api_v1_upload():
@@ -108,7 +155,6 @@ def benfordParser():
 #             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 #             return redirect(url_for('download_file', name=filename))
 #     return render_json()
-
 
 if __name__ == '__main__':
    app.run(debug = True, host='0.0.0.0')

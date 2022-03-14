@@ -3,15 +3,15 @@
         Results Page
 {% endblock %}
 
-
 {% block content %}
 <body>
-        <h2>Please provide a Username and Project Name</h2>
-        <h5>This defines the location of your analysis results</h5>
-        <p>Username:</p>  
-        <p><input type="text" name="Username"></p>
-        <p>Project Name:</p>
-        <p><input type="text" name="Project Name"></p>
-        <img src="/static/census_2009_parsed_plot.png" class="img-fluid">
+        <img src="{{plot_path}}" class="img-fluid">
 </body>
 {% endblock %}
+        <ul>
+        {% for row in datafile %}
+                {% for column in row %}
+                <li>{{column}}</li>
+                {% endfor %}
+        {% endfor %}
+        </ul>

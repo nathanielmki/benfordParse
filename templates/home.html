@@ -4,11 +4,28 @@
 {% endblock %}
 
 {% block content %}
-<body>
-  <h3>Choose a file to be uploaded and processed by Benford Parser</h2>
-  <form method="POST" action="{{ url_for('upload_page') }}" enctype="multipart/form-data">
-    <p><input type="file" name="file"></p>
-    <p><input type="submit" value="Submit"></p>
-  </form>
-</body>
+<div class="bg-dark text-secondary px-4 py-5 text-center ">
+  <img class="d-block mx-auto mb-4" src="/static/assets/journal-code.svg" alt="" width="72" height="57">
+  <div class="py-5">
+    <h1 class="display-5 fw-bold text-white">Welcome to Benford Parser</h1>
+    <div class="col-lg-6 mx-auto ">
+      <p class="fs-5 mb-4">Test a dataset against Benfords Law; display a table of counts, found distribution, and expected distribution. A plot will also be generated to visualize your output.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-3"></div>
+        <form method="POST" action="{{ url_for('upload_page') }}" enctype="multipart/form-data">
+          <input class="form-control" type="file" id="formFile" required = "true" name="file">
+          <!--<button class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold" type="file" name="file">Upload File</button>-->
+          <div class="mb-3"> 
+            <label for="columnOperator" class="form-label text-white">Which column would you like to operate on?</label>
+            <input type="text" class="form-control" id="columnOperator" required = "true" name="columnOperator" placeholder="example: 7_2009">
+          </div>
+          <div class="mb-3">
+            <label for="resultsOperator" class="form-label text-white">What would you like your results to be called?</label>
+            <input type="text" class="form-control" id="resultsOperator" required = "true" name="resultsOperator" placeholder="example: census_2009_parsed">
+          </div>
+          <button class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold" type="submit" formaction="/results.html" value="Submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
