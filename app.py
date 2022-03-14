@@ -14,7 +14,6 @@ from unittest import result
 from flask import Flask, flash, request, redirect, url_for, render_template, send_from_directory, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
-from benfordParser import main
 
 ALLOWED_EXTENSIONS = {'txt', 'csv', 'tsv', 'png'}
 UPLOAD_FOLDER = './upload'
