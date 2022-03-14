@@ -1,5 +1,5 @@
 # benfordParse
-Repo for Benford Parse web application, built with Flask and Docker
+Repo for Benford Parse web application, built with Flask
 
 ## Preamble
 
